@@ -1,0 +1,96 @@
+# Menus
+menu:
+  Home: .
+  Archives: archives
+  About: about
+
+# Customize
+customize:
+    logo:
+        enabled: false
+        width: 40
+        height: 40
+        url: /
+    profile:
+        enabled: true # Whether to show profile bar
+        avatar: /images/baptiste-vannesson.png
+        gravatar: # Gravatar email address, if you enable Gravatar, your avatar config will be overriden
+        author: Baptiste Vannesson
+        author_title: FLOSS Enthusiast
+        location: France
+        follow: https://github.com/Badacadabra
+    highlight: tomorrow-night
+    sidebar: right # sidebar position, options: left, right
+    thumbnail: true # enable posts thumbnail, options: true, false
+    favicon: https://avatars1.githubusercontent.com/u/6485527?v=3&s=32
+    social_links:
+        github: https://github.com/Badacadabra
+        stack-exchange: https://stackexchange.com/users/9306921/badacadabra
+        twitter: https://twitter.com/Badacadabra
+        linkedin: https://fr.linkedin.com/in/baptistevannesson/en
+        pinterest: https://fr.pinterest.com/badacadabra1337/
+        facebook: https://www.facebook.com/badacadabra.net/
+        rss: /atom.xml
+    social_link_tooltip: true # enable the social link tooltip, options: true, false
+
+# Widgets
+widgets:
+    - recent_posts
+    - category
+    - archive
+    - tag
+    - tagcloud
+    - links
+
+# Search
+search:
+    insight: true # you need to install `hexo-generator-json-content` before using Insight Search
+    swiftype: # enter swiftype install key here
+    baidu: false # you need to disable other search engines to use Baidu search, options: true, false
+
+# Comment
+comment:
+    disqus: badacadabra # enter disqus shortname here
+    duoshuo: # enter duoshuo shortname here
+    youyan: # enter youyan uid here
+    facebook: # enter true to enable
+    isso: # enter the domain name of your own comment isso server eg. comments.example.com
+    changyan: # please fill in `appid` and `conf` to enable
+        appid:
+        conf:
+
+# Share
+share: default # options: jiathis, bdshare, addtoany, default
+
+# Plugins
+plugins:
+    lightgallery: true # options: true, false
+    justifiedgallery: true # options: true, false
+    google_analytics: UA-93708400-1 # enter the tracking ID for your Google Analytics
+    google_site_verification: eTdBh__NBhZgjxD009CnQkXjmlTdIVnfZjgbeyd_c7o # enter Google site verification code
+    baidu_analytics: # enter Baidu Analytics hash key
+    mathjax: false # options: true, false
+
+# Miscellaneous
+miscellaneous:
+    open_graph: # see http://ogp.me
+        fb_app_id:
+        fb_admins:
+        twitter_id:
+        google_plus:
+    links:
+        Call ES5 class method from static method: https://stackoverflow.com/q/43474967/6910253
+        Extend a class with private/protected/public fields and methods: https://stackoverflow.com/q/43081398/6910253
+        How do I pass constructor parameters to imported class in ECMAScript 6?: https://stackoverflow.com/q/43551210/6910253
+        Arrow functions vs Fat arrow functions: https://stackoverflow.com/q/43588722/6910253
+        ES6 JavaScript template literals. What they can and can't do: https://stackoverflow.com/q/43660720/6910253
+        JS inheritance overriding in constructor?: https://stackoverflow.com/q/43685962/6910253
+        Arrays. Why does concatenating an empty array with a populated array result in a string?: https://stackoverflow.com/q/43690625/6910253
+        JavaScript inheritance not working as I expected: https://stackoverflow.com/q/43706801/6910253
+        let/const/var on global functions in JavaScript: https://stackoverflow.com/q/43709005/6910253
+        Storing things in objects vs arrays in JavaScript: https://stackoverflow.com/q/43723852/6910253
+        Convert string to number but keep '+' using JavaScript: https://stackoverflow.com/q/43821746/6910253
+        How to detect non-system-variables in JavaScript?: https://stackoverflow.com/q/43847347/6910253
+        JavaScript ES6 class with getters only: https://stackoverflow.com/q/42305351/6910253
+        Variable References for maintainability/value accuracy: https://stackoverflow.com/q/43953538/6910253
+        What is the purpose of doing `Object(this)`?: https://stackoverflow.com/q/44079391/6910253
