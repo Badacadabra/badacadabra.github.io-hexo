@@ -7,6 +7,7 @@ tags:
   - Blessed
   - Node.js
   - ES5
+  - Terminal
 thumbnail: /images/javascript.png
 ---
 
