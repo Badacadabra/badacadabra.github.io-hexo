@@ -7,6 +7,7 @@ tags:
   - OOP
   - ES5
   - ES6
+  - Java
 thumbnail: /images/javascript.png
 ---
 

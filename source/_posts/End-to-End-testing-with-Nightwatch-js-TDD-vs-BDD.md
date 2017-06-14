@@ -1,17 +1,17 @@
 ---
 title: 'End-to-End testing with Nightwatch.js: TDD vs BDD'
-tags:
-  - Nightwatch.js
-  - Testing
-  - Automation
-  - TDD
-  - BDD
-  - Selenium
-  - WebDriver
+date: 2017-06-13 23:43:15
 categories:
   - JavaScript
+tags:
+  - Nightwatch.js
+  - Node.js
+  - Testing
+  - Automation
+  - Selenium
+  - WebDriver
+  - ES5
 thumbnail: /images/javascript.png
-date: 2017-06-13 23:43:15
 ---
 
 
@@ -25,37 +25,36 @@ To be consistent, let's test the [Nightwatch](http://nightwatchjs.org/) official
 
 **End-to-End testing** is a key step in software development process. E2E tests are not the most complete ones because it is impossible to cover everything in an app at the top of the **testing pyramid**. E2E tests are generally slow and resource-intensive. However, they are richer than any other type of test because they bring all components together and consider the application as a whole. For this reason, E2E testing is often performed as **acceptance testing**.
 
-Contrary to other popular testing solutions like **CasperJS** which works on top of **PhantomJS** or **SlimerJS**, Nightwatch has been designed to work with *real* web browsers using **Selenium/WebDriver**. Thanks to Nightwatch, it is possible to control, remotely and programmatically, true instances of Firefox or Chromium.
+Contrary to other popular testing solutions like **CasperJS** which works on top of **PhantomJS** or **SlimerJS**, Nightwatch has been designed to work with *real* web browsers using **Selenium/WebDriver**. Thanks to Nightwatch, we can control, remotely and programmatically, true instances of Firefox or Chromium.
 
 Nightwatch testing API is based on two testing components: **Assert** and **Expect**. To test the Nightwatch website, we are going to use both, but we first need to give the specs.
 
 ## Specifications
 
-We need a **test suite** with two independent **test cases** that verify the following scenarios:
+We want a **test suite** with two independent **test cases** that verify the following scenarios:
 
 ### Home page
 
 1. Go to http://nightwatchjs.org
-2. Wait for the DOM to be ready
+2. Wait for the page to be loaded
 3. Check if page title is "Nightwatch.js | Node.js powered End-to-End testing framework"
 4. Check if navigation is visible
 5. Check if navigation contains a contact link
 6. Log all items from navigation
-7. Check if the "API Reference" link references the right page
-8. Click that link
-9. Check if page title is "API Reference | Nightwatch.js"
-12. Take a screenshot
+7. Check if the "Getting Started" link references the right page
+8. Take a screenshot
+9. Click that link
+10. Check if page title is now "Getting Started | Nightwatch.js"
 
 ### API Reference
 
 1. Go to http://nightwatchjs.org/api
-2. Wait for the DOM to be ready
+2. Wait for the page to be loaded
 3. Check if the main container has the "secondary" class
 4. Check if the main title is "API Reference"
 5. Check if there are four items in the sidebar menu
 6. Check if the sidebar menu contains "Assert" or "Expect"
 7. Take a screenshot
-8. Close the test suite
 
 ## Nightwatch with Assert (TDD)
 
@@ -86,14 +85,15 @@ module.exports = {
       .assert.visible('.navbar ul.nav')
       .assert.containsText('.navbar ul.nav', 'Contact')
       .elements('css selector', '.navbar ul.nav li', logNav)
-      .assert.attributeContains('.navbar ul.nav li:nth-of-type(4) a', 'href', '/api')
-      .click('.navbar ul.nav li:nth-of-type(4)')
-      .assert.title('API Reference | Nightwatch.js')
-      .screenshot();
+      .assert.attributeContains('.navbar ul.nav li:nth-of-type(2) a', 'href', '/gettingstarted')
+      .saveScreenshot('./screenshots/assert-home.png')
+      .click('.navbar ul.nav li:nth-of-type(2)')
+      .assert.title('Getting Started | Nightwatch.js')
+      .end();
   },
 
   // Second test case
-  'API Reference': function (browser) {
+  'API': function (browser) {
 
     var sidebarMenu = '#api-container .bs-sidebar > ul > li';
 
@@ -105,9 +105,10 @@ module.exports = {
     browser
       .url('http://nightwatchjs.org/api')
       .waitForElementPresent('body', 1000)
+      .assert.cssClassPresent('#api-container', 'secondary')
       .assert.containsText('#api-container h1', 'API Reference')
       .elements('css selector', sidebarMenu, testSidebar)
-      .screenshot()
+      .saveScreenshot('./screenshots/assert-api.png')
       .end();
   }
 };
@@ -141,14 +142,15 @@ module.exports = {
     browser.expect.element('.navbar ul.nav').to.be.visible;
     browser.expect.element('.navbar ul.nav').text.to.contain('Contact');
     browser.elements('css selector', '.navbar ul.nav li', logNav);
-    browser.expect.element('.navbar ul.nav li:nth-of-type(4) a').to.have.attribute('href').which.contains('/api');
-    browser.click('.navbar ul.nav li:nth-of-type(4)');
-    browser.expect.element('title').text.to.equal('API Reference | Nightwatch.js');
-    browser.screenshot();
+    browser.expect.element('.navbar ul.nav li:nth-of-type(2) a').to.have.attribute('href').which.contains('/gettingstarted');
+    browser.saveScreenshot('./screenshots/expect-home.png');
+    browser.click('.navbar ul.nav li:nth-of-type(2)');
+    browser.expect.element('title').text.to.equal('Getting Started | Nightwatch.js');
+    browser.end();
   },
 
   // Second test case
-  'API Reference': function (browser) {
+  'API': function (browser) {
 
     var sidebarMenu = '#api-container .bs-sidebar > ul > li';
 
@@ -159,13 +161,34 @@ module.exports = {
 
     browser.url('http://nightwatchjs.org/api');
     browser.waitForElementPresent('body', 1000);
+    browser.expect.element('#api-container').to.have.attribute('class').equals('secondary');
     browser.expect.element('#api-container h1').text.to.contain('API Reference');
     browser.elements('css selector', sidebarMenu, testSidebar);
-    browser.screenshot();
+    browser.saveScreenshot('./screenshots/expect-api.png');
     browser.end();
   }
 };
 ```
+
+## Running Nightwatch scripts
+
+There are three main levels of execution for Nightwatch scripts:
+
+- Test groups
+- Test suites
+- Test cases
+
+### Test groups
+
+A test group is a folder that contains test suites (files). In our example, we could run all tests in the main group using `nightwatch -g tests`.
+
+### Test suites
+
+A test suite is a file. Here we actually defined two test suites, called `assert.js` and `expect.js`. To run a test suite, we can use `nightwatch -t tests/assert.js` and/or `nightwatch -t tests/expect.js`. These commands will execute all test cases in `assert.js` and/or `expect.js` respectively.
+
+### Test cases
+
+A test case is a step in a test suite. To run a single test case from a specific test suite, we can use the `testcase` option. For example, to run the "Home" test case from the "Expect" test suite, the command is the following: `nightwatch -t tests/expect.js --testcase "Home"`.
 
 ## Conclusion
 

@@ -9,8 +9,8 @@ tags:
   - SlimerJS
   - CasperJS
   - ES5
-  - Scraping
   - Automation
+  - Scraping
 thumbnail: /images/javascript.png
 ---
 
