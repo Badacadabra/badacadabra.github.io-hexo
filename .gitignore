@@ -58,6 +58,7 @@ typings/
 .env
 
 # Hexo
+.deploy_git/
 public/
 db.json
 

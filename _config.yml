@@ -76,6 +76,6 @@ deploy:
 
 # RSS
 feed:
-    type: atom
-    path: atom.xml
-    limit: 20
+  type: atom
+  path: atom.xml
+  limit: 20
