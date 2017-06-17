@@ -1,14 +1,16 @@
 ---
 title: JavaScript one-liners to show off
-categories:
-- JavaScript
 tags:
-- ES5
-- ES6
+  - ES5
+  - ES6
+categories:
+  - JavaScript
 thumbnail: /images/javascript.png
+date: 2017-06-17 22:44:09
 ---
 
-JavaScript is sometimes quite verbose, isn't it? If brevity and efficiency matter, a nice motto might be: *write less, do more*. (jQuery, I'm looking at you!)
+
+JavaScript is sometimes quite verbose, isn't it? If conciseness and effectiveness matter to you, a nice programming motto might be: *write less, do more*. (jQuery, I'm looking at you!)
 
 Writing complex and powerful code on a single line is often an exciting experience where the only tangible limit is readability. One-liners in JavaScript represent a key topic that has been boosted by the arrival of ECMAScript 2015 (ES6). We cover this right here.
 
@@ -16,7 +18,15 @@ Writing complex and powerful code on a single line is often an exciting experien
 
 ## Ancestral techniques (ES5)
 
-ECMAScript 5 is definitely not the best specification to show off with one-liners. In fact, one-liners are rarely used in ES5 because they tend to be too long due to syntax limitations. But some well-known programming techniques make it possible to write more concise code...
+ECMAScript 5 is definitely not the best specification to show off with one-liners. In fact, one-liners are rarely used in ES5 because they tend to be too long due to syntax limitations. ES5 one-liners are generally allowed by simple methods in `Array.prototype` and/or `String.prototype` (e.g. `concat`, `reverse`, `slice`, `join`, `replace`, etc.).
+
+Here is a "WTF example" to illustrate what we are talking about:
+
+```JavaScript
+console.log(['foo', 'bar'].concat(['baz', 'qux'].reverse().slice(1)).join(' ').replace(/a/i, 'ee').toUpperCase()); // FOO BEER BAZ
+```
+
+Nevertheless, we can go further with ES5 thanks to some well-known JS techniques and idioms that make it possible to write more concise code...
 
 ### Currying
 
@@ -92,19 +102,117 @@ Counter.prototype.add = function () {
 };
 ```
 
-If we want a counter to be incremented three times, we will end up with the following code:
+If we want a counter to be incremented three times, we will end up with the following line:
 
 ```JavaScript
 var c = new Counter(); c.add(); c.add(); c.add(); console.log(c.val); // 3
 ```
 
-This code works, but writing it on a single line looks terrible. With method chaining, this is much prettier:
+This code works, but writing it on a single line looks terrible. With method chaining, this is obviously much prettier:
 
 ```JavaScript
 console.log(new Counter().add().add().add().val); // 3
 ```
 
 **To get this amazing behavior, `Counter.prototype.add` just have to return `this`!**
+
+### Immediately-Invoked Function Expressions (IIFEs)
+
+Regular functions must be explicitly invoked *before* (thanks to hoisting) or *after* they have been declared to perform some action:
+
+**Before**
+
+```JavaScript
+console.log(foo()); // Foo
+
+function foo() {
+  return 'Foo';
+}
+```
+
+**After**
+
+```JavaScript
+function foo() {
+  return 'Foo';
+}
+
+console.log(foo()); // Foo
+```
+
+Creating a one-liner with such a function is trivial:
+
+```JavaScript
+// Invocation first
+console.log(foo()); function foo() { return 'Foo'; } // Foo
+
+// Declaration first
+function foo() { return 'Foo'; }; console.log(foo()); // Foo
+```
+
+Well... It is not fantastic, is it?
+
+Using an IIFE, that is to say a function expression that calls itself,  would be more convenient:
+
+```JavaScript
+console.log((function () { return 'Foo'; })()); // Foo
+```
+
+### The ternary operator
+
+This operator can be used as a shortcut for `if`/`else` statements. For instance, this code is a bit too verbose to be refactored on a single line:
+
+```JavaScript
+if (Array.isArray(['foo', 'bar'])) {
+  console.log('OK');
+} else {
+  console.log('KO');
+}
+```
+
+If we try, we can see that the result is painful to read:
+
+```JavaScript
+if (Array.isArray(['foo', 'bar'])) { console.log('OK'); } else { console.log('KO'); } // OK
+```
+
+With the ternary operator, we do not have this problem:
+
+```JavaScript
+console.log(Array.isArray(['foo', 'bar']) ? 'OK' : 'KO'); // OK
+```
+
+The ternary operator is, to some extent, a powerful factory of one-liners. But, be careful. Any abuse make the code unreadable:
+
+```JavaScript
+console.log('Go!' ? '' ? 'Next' ? 'It works!' : 'It does not work!' : 'KO' : 'Oops!'); // KO
+```
+
+### Short-circuit operators
+
+Just like the ternary operator, these operators (`&&` and `||`) are mostly used in a boolean context and are perfect to replace `if`/`else` statements that would be hard to read in a one-liner.
+
+```JavaScript
+function isEmptyObject(obj) { return typeof obj === 'object' && obj.toString() === '[object Object]' && !Object.getOwnPropertyNames(obj).length }
+```
+
+But since any value can be **truthy** or **falsy** in JavaScript, expressions using short-circuit operators may also return non-boolean values...
+
+```JavaScript
+console.log(true && 1 && 'hello' && {} && ['foo', 'bar']); // ['foo', 'bar']
+console.log(false || 0 || '' || [].toString() || {foo: 'Foo'}); // {foo: 'Foo'}
+console.log(true && 0 || 'hello' || [] && {}); // hello
+```
+
+`&&`:
+
+- When the left operand is truthy, the next operand is evaluated
+- When the left operand is falsy, the next operand is not evaluated and the current value is returned
+
+`||`:
+
+- When the left operand is truthy, the next operand is not evaluated and the current value is returned
+- When the left operand is falsy, the next operand is evaluated
 
 ## Modern techniques (ES6)
 
@@ -207,17 +315,24 @@ let longestWord = str => str.split(' ').sort((a, b) => b.length - a.length)[0];
 console.log(longestWord('This is Sparta!')); // Sparta!
 ```
 
-### Capitalizing the first letter at each new line for multiline strings
+### Capitalizing the first letter of each line (for multiline strings)
 
 ```JavaScript
 // One-liner
-let addCapital = str => str[0].split('\n').map(v => `${v.charAt(0).toUpperCase()}${v.substr(1)}`).join('\n');
+let capitalize = str => str[0].split('\n').map(v => `${v.charAt(0).toUpperCase()}${v.substr(1)}`).join('\n');
 
 // How to use it
-console.log(addCapital`roses are red,
+console.log(capitalize`roses are red,
 violets are blue,
 sugar is sweet,
 and so are you.`);
+
+/*
+  Roses are red,
+  Violets are blue,
+  Sugar is sweet,
+  And so are you.
+*/
 ```
 
 ### Removing duplicates from an array
@@ -227,10 +342,10 @@ and so are you.`);
 let removeDuplicates = arr => [...new Set(arr)];
 
 // How to use it
-console.log(removeDuplicates(['foo', 'bar', 'baz', 'bar', 'foo', 'foo', 'baz', 'foo']));
+console.log(removeDuplicates(['foo', 'bar', 'bar', 'foo', 'bar'])); // ['foo', 'bar']
 ```
 
-### Checking if all elements of an array come from another one
+### Checking if all elements of an array are in another one
 
 ```JavaScript
 // One-liner
@@ -239,6 +354,18 @@ let similarArrays = (arr1, arr2)  => arr1.every(v1 => arr2.some(v2 => v1 === v2)
 // How to use it
 console.log(similarArrays(['foo', 3], [3, false, {}, 'foo'])); // true
 console.log(similarArrays(['foo', 3], [1337, 'bar', 3, 'qux'])); // false
+
+// Beware: objects are compared by reference...
 ```
 
-(Beware: objects are compared by reference...)
+### Swaping values of object properties
+
+```JavaScript
+// One-liner
+let swapPropsValues = (o, p1, p2) => o[p1] && o[p2] && ([o[p1], o[p2]] = [o[p2], o[p1]]);
+
+// How to use it
+let obj = {foo: 'Foo', bar: 'Bar'};
+swapPropsValues(obj, 'foo', 'bar');
+console.log(obj); // {foo: 'Bar', bar: 'Foo'}
+```
